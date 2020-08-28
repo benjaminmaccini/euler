@@ -1,6 +1,8 @@
 package helpers
 
-import "math"
+import (
+	"math"
+)
 
 // Sieve of Eratosthenes
 func FindPrimes(n float64) []int {

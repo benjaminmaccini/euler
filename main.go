@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"os"
 	"strconv"
+	"time"
 
 	"euler/helpers"
 )
@@ -162,6 +163,72 @@ func problem107() int {
 	return reduction
 }
 
+type AdditionTreeNode struct {
+	value    int
+	children []*AdditionTreeNode
+	parent   *AdditionTreeNode
+}
+
+// Recursively build a tree
+// limit is the max tree depth, initial value being 0
+// Keep track of the lowest depth and use that as the minimal chain length, we don't actually have to
+// know the chain
+func buildAdditionTree(node *AdditionTreeNode, chain []int, limit int, depths map[int]int) {
+
+	if depth, exists := depths[node.value]; !exists {
+		depths[node.value] = limit
+	} else if limit < depth {
+		depths[node.value] = limit
+	}
+
+	// Kill the tree if the depth is >11, this was determined via Flammenkamp's a(n) <= 9/log_2(n)*log_2(v(n))
+	// where v(n) is the population count of the binary representation
+	limit += 1
+	if limit <= 11 {
+		for _, a := range chain {
+			childValue := node.value + a
+			nextChain := append(chain, childValue)
+			grandchildren := make([]*AdditionTreeNode, 0)
+			child := AdditionTreeNode{
+				value:    childValue,
+				children: grandchildren,
+				parent:   node,
+			}
+			node.children = append(node.children, &child)
+			buildAdditionTree(&child, nextChain, limit, depths)
+		}
+	}
+}
+
+// Find the sum of the minimal addition chains for all n <= 200
+// Thurber's Algorithm (not used since I just need to know the depths): https://pdfs.semanticscholar.org/6e33/657f2acf01c70fb66fbcc9c06416123c7ed6.pdf
+// This as reference: https://oeis.org/A003313
+// Answer: 1582
+func problem122(n int) {
+	children := make([]*AdditionTreeNode, 0)
+	treeGenChain := []int{1}
+	root := AdditionTreeNode{
+		value:    1,
+		children: children,
+		parent:   nil,
+	}
+
+	depths := make(map[int]int)
+
+	// Build Tree
+	start := time.Now()
+	buildAdditionTree(&root, treeGenChain, 0, depths)
+	t := time.Now().Sub(start)
+	fmt.Printf("Build tree time: %s\n", t.String())
+
+	sum := 0
+	for i := 1; i <= n; i++ {
+		sum += depths[i]
+	}
+
+	fmt.Printf("%d", sum)
+}
+
 func main() {
-	problem107()
+	problem122(200)
 }
