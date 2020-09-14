@@ -6,6 +6,7 @@ import (
 	"math"
 	"math/rand"
 	"os"
+	"sort"
 	"strconv"
 	"time"
 
@@ -22,13 +23,6 @@ func problem1Naive() int {
 		}
 	}
 	return sum
-}
-
-// Positive 2x2 positive integer matrices that can be represented as the square of a 2x2 positive integer matrix
-// If so their determinant is a perfect square.
-// 1. Find all the matrices with perfect square determinants
-func problem420() string {
-	return "Not yet implemented"
 }
 
 // Find the smallest odd composite that cannot be written as the sum of a prime and twice a square
@@ -68,6 +62,95 @@ func problem46(n float64) int {
 	}
 
 	return 0
+}
+
+// Find the length of the longest amicable chain with all elements < 1000000
+// Don't need to search for anything > 500000
+func problem95() int {
+	primes := helpers.FindPrimes(50.0)
+
+	// Find sums, map to the number
+	sums := make(map[int]int)
+	start := time.Now()
+	for i := 1; i < 37; i++ {
+		sum := 1 - i // This is to account for prime factoring method below
+		// Find the prime factors, with their exponents
+		primeFactorsMap := map[int]int{}
+		j := i
+		for {
+			if j == 0 || j == 1 {
+				break
+			}
+			for _, p := range primes {
+				k := j % p
+				if k == 0 {
+					if _, exists := primeFactorsMap[p]; exists {
+						primeFactorsMap[p] += 1
+					} else {
+						primeFactorsMap[p] = 1
+					}
+					j /= p
+					break
+				}
+			}
+		}
+
+		// Convert to a list for permutation
+		primeFactors := []int{}
+		for p, v := range primeFactorsMap {
+			for k := 0; k < v; k++ {
+				primeFactors = append(primeFactors, p)
+			}
+		}
+
+		divisorPrimeFactors := sort.Permutation(sort.IntSlice(primeFactors))
+		divisors := []int{}
+		for _, dFactors := range divisorPrimeFactors {
+			d := 1
+			for _, f := range dFactors {
+				d *= f
+			}
+		}
+
+		for _, d := range divisors {
+			sum += d
+		}
+		sums[i] = sum
+	}
+	t := time.Now().Sub(start)
+	fmt.Printf("Find sums time: %s\n", t.String())
+
+	maxLen := 1
+
+	// Find chains
+	for n, s := range sums {
+		chainOrdered := []int{n, s}
+		chain := map[int]int{n: s}
+		ns := s
+		for {
+			_, exists := chain[ns]
+			if exists {
+				break
+			} else {
+				nns, _ := sums[ns]
+				chain[ns] = nns
+				chainOrdered = append(chainOrdered, nns)
+				ns = nns
+			}
+		}
+
+		// Check to see if the chain is amicable
+		if chainOrdered[0] == chainOrdered[len(chainOrdered)-1] {
+			// Count the length
+			chainLen := len(chainOrdered) - 1
+			if chainLen > maxLen {
+				fmt.Printf("New longest chain found len:%d chainOrdered:%#v chain:%#v\n", chainLen, chainOrdered, chain)
+				maxLen = chainLen
+			}
+		}
+	}
+
+	return maxLen
 }
 
 // Find the minimal connected network (minimal spanning tree) with the largest savings from a 40 node network
@@ -230,5 +313,6 @@ func problem122(n int) {
 }
 
 func main() {
-	problem122(200)
+	i := problem95()
+	fmt.Println(i)
 }
