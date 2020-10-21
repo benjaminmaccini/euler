@@ -25,6 +25,42 @@ func problem1Naive() int {
 	return sum
 }
 
+// How many circular primes are there below one million?
+// Answer = 55
+func problem35(n float64) int {
+	primes := helpers.FindPrimes(n)
+
+	// Start like this to account for the 2
+	count := 1
+
+	for i, p := range primes {
+		ps := strconv.Itoa(p)
+		tally := 1
+		for j := 0; j < len(ps); j++ {
+			// Cycle the number
+			ps = ps[1:] + string(ps[0])
+
+			// Just let it blow up if there is an error
+			checkMe, _ := strconv.Atoi(ps)
+
+			// Because we add the total count we shouldn't need to traverse the whole list again
+			for _, pp := range primes[i+1:] {
+				if checkMe == pp {
+					tally += 1
+					break
+				}
+			}
+		}
+
+		// If the tally matches add the tally to the total count
+		if tally == len(ps) {
+			count += tally
+		}
+	}
+
+	return count
+}
+
 // Find the smallest odd composite that cannot be written as the sum of a prime and twice a square
 // k = p + 2*(a)^2
 // (k - p)/2 = a^2
@@ -103,7 +139,7 @@ func problem95() int {
 			}
 		}
 
-		divisorPrimeFactors := sort.Permutation(sort.IntSlice(primeFactors))
+		divisorPrimeFactors := helpers.Permutations(sort.IntSlice(primeFactors))
 		divisors := []int{}
 		for _, dFactors := range divisorPrimeFactors {
 			d := 1
@@ -313,6 +349,6 @@ func problem122(n int) {
 }
 
 func main() {
-	i := problem95()
+	i := problem35(1000000)
 	fmt.Println(i)
 }
