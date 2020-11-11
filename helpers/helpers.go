@@ -61,3 +61,11 @@ func Permutations(arr []int) [][]int {
 	helper(arr, len(arr))
 	return res
 }
+
+func Factorial(n int) (result int) {
+	if n > 0 {
+		result = n * Factorial(n-1)
+		return result
+	}
+	return 1
+}

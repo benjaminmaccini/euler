@@ -25,6 +25,39 @@ func problem1Naive() int {
 	return sum
 }
 
+// Find the millionth permutation (i.e. 012 < 021 < 102 < ...) for the digits 0-9
+// Answer: 2783915460
+func problem24() string {
+	digits := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
+
+	count := 1000000
+	i := 0
+
+	final := ""
+
+	for len(digits) > 0 {
+		step := helpers.Factorial(len(digits) - 1)
+
+		fmt.Printf("step: %d, count %d\n", step, count)
+		if (count - step) <= 0 {
+			final += digits[i]
+			if i < len(digits)-1 {
+				digits = append(digits[0:i], digits[i+1:]...)
+			} else {
+				digits = digits[0:i]
+			}
+			fmt.Printf("final: %s, remaining %v\n", final, digits)
+			i = 0
+		} else {
+			count -= step
+			i++
+		}
+
+	}
+
+	return final
+}
+
 // How many circular primes are there below one million?
 // Answer = 55
 func problem35(n float64) int {
@@ -383,6 +416,6 @@ func problem131(limit int) int {
 }
 
 func main() {
-	i := problem131(1000000)
+	i := problem24()
 	fmt.Println(i)
 }
