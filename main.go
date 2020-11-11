@@ -348,7 +348,41 @@ func problem122(n int) {
 	fmt.Printf("%d", sum)
 }
 
+// There are some prime values, p, for which there exists a positive integer, n, such that the expression n^3 + p*n^2 is a perfect cube.
+// Find how many primes below one million satisfy this property
+// Answer:
+func problem131(limit int) int {
+	primes := helpers.FindPrimes(float64(limit))
+
+	fmt.Println(len(primes))
+
+	pMap := make(map[float64]bool)
+
+	for _, p := range primes {
+		pMap[float64(p)] = true
+	}
+
+	count := 0
+
+	for k := 2; k < limit*limit; k++ {
+		k3 := k * k * k
+		for n := k - 1; n > 1; n-- {
+			v := k3 - (n * n * n)
+			if v%(n) == 0 {
+				p := float64(v) / float64(n*n)
+				_, ok := pMap[p]
+				if ok {
+					fmt.Printf("p=%d n=%d k=%d count=%d\n", int(p), n, int(k), count)
+					count++
+				}
+			}
+		}
+	}
+
+	return count
+}
+
 func main() {
-	i := problem35(1000000)
+	i := problem131(1000000)
 	fmt.Println(i)
 }
