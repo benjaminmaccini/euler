@@ -14,7 +14,7 @@ import (
 )
 
 // Find the sum of all the multiples of 3 or 5 below 1000.
-// Answer = 233168
+// Status: Complete
 func problem1Naive() int {
 	sum := 0
 	for i := 1; i < 1000; i++ {
@@ -26,7 +26,7 @@ func problem1Naive() int {
 }
 
 // Find the millionth permutation (i.e. 012 < 021 < 102 < ...) for the digits 0-9
-// Answer: 2783915460
+// Status: Complete
 func problem24() string {
 	digits := []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}
 
@@ -59,7 +59,7 @@ func problem24() string {
 }
 
 // How many circular primes are there below one million?
-// Answer = 55
+// Status: Complete
 func problem35(n float64) int {
 	primes := helpers.FindPrimes(n)
 
@@ -98,7 +98,7 @@ func problem35(n float64) int {
 // k = p + 2*(a)^2
 // (k - p)/2 = a^2
 // So find the first k s.t. for all p's < k, (k - p)/2 is not a perfect square
-// Answer = 5777
+// Status: Complete
 func problem46(n float64) int {
 	primes := helpers.FindPrimes(n)
 
@@ -226,7 +226,7 @@ func problem95() int {
 // Provided in p107_network.txt or p107_test.txt
 // https://en.wikipedia.org/wiki/Minimum_spanning_tree
 // Using Prim's Algorithm
-// Answer = 259679
+// Status: Complete
 func problem107() int {
 	file, err := os.Open("p107_network.txt")
 	if err != nil {
@@ -355,7 +355,7 @@ func buildAdditionTree(node *AdditionTreeNode, chain []int, limit int, depths ma
 // Find the sum of the minimal addition chains for all n <= 200
 // Thurber's Algorithm (not used since I just need to know the depths): https://pdfs.semanticscholar.org/6e33/657f2acf01c70fb66fbcc9c06416123c7ed6.pdf
 // This as reference: https://oeis.org/A003313
-// Answer: 1582
+// Status: Complete
 func problem122(n int) {
 	children := make([]*AdditionTreeNode, 0)
 	treeGenChain := []int{1}
@@ -383,7 +383,7 @@ func problem122(n int) {
 
 // There are some prime values, p, for which there exists a positive integer, n, such that the expression n^3 + p*n^2 is a perfect cube.
 // Find how many primes below one million satisfy this property
-// Answer:
+// Status: Complete
 func problem131(limit int) int {
 	primes := helpers.FindPrimes(float64(limit))
 
