@@ -8,6 +8,7 @@ import (
 	"os"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"euler/helpers"
@@ -133,8 +134,36 @@ func problem46(n float64) int {
 	return 0
 }
 
+// Find the smallest x s.t. 2x, 3x, 4x, 5x, and 6x all have the same digits (in different orders)
+// Status: Complete
+func problem52() int {
+	for i := 1; i <= 100000000; i++ {
+		s := strconv.Itoa(i)
+		s2 := strconv.Itoa(i * 2)
+		s3 := strconv.Itoa(i * 3)
+		s4 := strconv.Itoa(i * 4)
+		s5 := strconv.Itoa(i * 5)
+		s6 := strconv.Itoa(i * 6)
+
+		for _, c := range s {
+			s2 = strings.Replace(s2, string(c), "", 1)
+			s3 = strings.Replace(s3, string(c), "", 1)
+			s4 = strings.Replace(s4, string(c), "", 1)
+			s5 = strings.Replace(s5, string(c), "", 1)
+			s6 = strings.Replace(s6, string(c), "", 1)
+		}
+
+		if "" == s2 && "" == s3 && "" == s4 && "" == s5 && "" == s6 {
+			return i
+		}
+	}
+
+	return 0
+}
+
 // Find the length of the longest amicable chain with all elements < 1000000
 // Don't need to search for anything > 500000
+// Status: Incomplete
 func problem95() int {
 	primes := helpers.FindPrimes(50.0)
 
@@ -416,6 +445,6 @@ func problem131(limit int) int {
 }
 
 func main() {
-	i := problem24()
+	i := problem52()
 	fmt.Println(i)
 }
